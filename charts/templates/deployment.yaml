@@ -82,7 +82,7 @@ spec:
           items:
           - key: "wg0.key"
             path: "wg0.key"
-      - name: wireguard-config
+      - name: {{ .Release.Name }}-config
         configMap:
           name: {{ .Release.Name }}-configmap
           items:
