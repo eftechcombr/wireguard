@@ -1,6 +1,7 @@
 FROM alpine:3.18
 
-COPY wireguard_healthcheck.py entrypoint.sh . 
+COPY wireguard_healthcheck.py /
+COPY entrypoint.sh / 
 
 RUN apk update && \
   apk add -U wireguard-tools && \
