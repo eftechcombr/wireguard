@@ -1,10 +1,13 @@
-FROM alpine:3.18
+FROM alpine:3.20
 
-ADD wireguard_healthcheck.py entrypoint.sh . 
+COPY wireguard_healthcheck.py /
+COPY entrypoint.sh / 
 
 RUN apk update && \
-  apk add -U wireguard-tools && \
-  apk add python3 curl  && \
+  apk --no-cache add wireguard-tools=~1.0.20210914 && \
+  apk --no-cache add python3=~3.12.3 && \
+  apk --no-cache add curl=~8.9.0 && \
+  apk --no-cache add iptables=~1.8.10 && \
   chmod +x entrypoint.sh wireguard_healthcheck.py
 
 VOLUME [ "/etc/wireguard" ]
