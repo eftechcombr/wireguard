@@ -41,7 +41,8 @@ class WebServer(BaseHTTPRequestHandler):
 def is_link_up(interface):
     """Define if network link is up."""
     try:
-        open(f'/sys/class/net/{interface}/carrier').read().strip()
+        with open('/sys/class/net/{interface}/carrier', 'r') as f: 
+             f.read().strip()
 
     except (FileNotFoundError, OSError):
         return False
