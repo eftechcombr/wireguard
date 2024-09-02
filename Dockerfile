@@ -6,7 +6,7 @@ COPY entrypoint.sh /
 RUN apk update && \
   apk --no-cache add wireguard-tools=~1.0.20210914 && \
   apk --no-cache add python3=~3.12.3 && \
-  apk --no-cache add curl=~8.9.0 && \
+  apk --no-cache add curl && \
   apk --no-cache add iptables=~1.8.10 && \
   chmod +x entrypoint.sh wireguard_healthcheck.py
 
