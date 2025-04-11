@@ -1,4 +1,6 @@
-# README.md
+# Wireguard
+
+[![Docker build latest on ghcr](https://github.com/eftechcombr/wireguard/actions/workflows/docker-publish-ghcr-latest.yml/badge.svg)](https://github.com/eftechcombr/wireguard/actions/workflows/docker-publish-ghcr-latest.yml) 
 
 
 > ## Generate Public and Private Key
