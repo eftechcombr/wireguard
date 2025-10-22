@@ -4,7 +4,7 @@
 
 ## Overview
 
-This repository provides a containerized Wireguard VPN solution, including health checks and Helm charts for Kubernetes deployment.
+This repository provides a containerized Wireguard VPN solution, including health checks.
 
 ---
 
@@ -52,20 +52,6 @@ python wireguard_healthcheck.py
 
 ---
 
-## Helm Chart
-
-Helm charts are available in the `charts/` directory for Kubernetes deployment.
-
-### Install with Helm
-
-```sh
-helm install wireguard ./charts
-```
-
-Customize values in `charts/values.yaml` as needed.
-
----
-
 ## File Structure
 
 ```
@@ -73,15 +59,6 @@ etc/
   privatekey
   publickey
   wg0.conf
-charts/
-  Chart.yaml
-  values.yaml
-  templates/
-    configmap.yaml
-    deployment.yaml
-    namespace.yaml
-    secret.yaml
-    service.yaml
 wireguard_healthcheck.py
 Dockerfile
 entrypoint.sh
@@ -95,14 +72,12 @@ entrypoint.sh
 - Run health check: `python wireguard_healthcheck.py`
 - Build Docker image: `docker build -t eftechcombr/wireguard .`
 - Run container: see above
-- Deploy with Helm: see above
 
 ---
 
 ## References
 
 - [Wireguard Documentation](https://www.wireguard.com/)
-- [Helm Documentation](https://helm.sh/docs/)
 
 ---
 
