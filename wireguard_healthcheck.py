@@ -38,15 +38,14 @@ class WebServer(BaseHTTPRequestHandler):
         self.send_response(return_status_code('wg0'))
         self._set_headers()
 
-def is_link_up(interface):
-    """Define if network link is up."""
+def is_link_up(interface: str) -> bool:
+    """Check if network interface is up."""
     try:
-        open(f'/sys/class/net/{interface}/carrier').read().strip()
+        with open(f'/sys/class/net/{interface}/carrier') as f:
+            return f.read().strip() == '1'
 
     except (FileNotFoundError, OSError):
         return False
-
-    return True
 
 def return_status_code(interface):
     """Create status code based on wireguard network interface status."""
