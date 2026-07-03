@@ -1,0 +1,31 @@
+project:
+  name: "Jupyter Notebook Helm Deployment Plan"
+  scale: MEDIUM
+  started: "2026-04-17T17:51:22.697Z"
+  current_phase: P
+
+phases:
+  P:
+    status: in_progress
+    started_at: "2026-04-17T17:51:22.697Z"
+  R:
+    status: pending
+  E:
+    status: pending
+  V:
+    status: pending
+  C:
+    status: skipped
+    reason: "Not required for scale MEDIUM"
+
+execution:
+  history:
+    - timestamp: "2026-04-17T17:51:22.697Z"
+      phase: P
+      action: started
+    - timestamp: "2026-04-17T17:51:22.700Z"
+      phase: C
+      action: phase_skipped
+  last_activity: "2026-04-17T17:51:22.700Z"
+  resume_context: "Fase P (Planejamento) em progresso"
+

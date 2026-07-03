@@ -1,7 +1,8 @@
 #!/bin/bash
+set -eo pipefail
 
 finish () {
-    wg-quick down wg0
+    wg-quick down wg0 || true
     exit 0
 }
 trap finish SIGTERM SIGINT SIGQUIT

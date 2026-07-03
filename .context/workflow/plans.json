@@ -1,0 +1,14 @@
+{
+  "active": [
+    {
+      "slug": "wireguard-security-audit-plan",
+      "path": "plans/wireguard-security-audit-plan.md",
+      "title": "Wireguard Security and Quality Enhancement",
+      "summary": "Audit and address security issues, bugs, and packaging/workflow quality improvements in the Wireguard container project.",
+      "linkedAt": "2026-07-03T10:36:12.093Z",
+      "status": "active"
+    }
+  ],
+  "completed": [],
+  "primary": "wireguard-security-audit-plan"
+}
