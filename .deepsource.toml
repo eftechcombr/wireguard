@@ -12,6 +12,7 @@ name = "go"
 
   [analyzers.meta]
   import_root = "github.com/eftechcombr/wireguard"
+  skip_doc_coverage = ["file"]
 
 [[analyzers]]
 name = "docker"
