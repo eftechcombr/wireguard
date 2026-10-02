@@ -117,8 +117,10 @@ For production deployments, consider these additional environment variables:
 │   ├── privatekey          # Wireguard private key (generated)
 │   ├── publickey           # Wireguard public key (generated)
 │   └── wg0.conf            # Main Wireguard configuration
-├── wireguard_healthcheck.py  # HTTP health check server
-├── Dockerfile             # Container build definition
+├── go.mod                  # Go module definition
+├── main.go                 # HTTP health check server (Go)
+├── main_test.go            # Health check server unit tests
+├── Dockerfile             # Multi-stage container build definition
 ├── entrypoint.sh          # Container startup script
 ├── docker-compose.yml     # Orchestration configuration
 └── README.md              # This documentation
@@ -135,7 +137,7 @@ For production deployments, consider these additional environment variables:
 │ │ VPN Traffic │ │    │                 │    │ 200/503 status  │
 │ └─────────────┘ │    │ ┌─────────────┐ │    │                 │
 │ ┌─────────────┐ │    │ │  wg-quick   │ │    │ ┌─────────────┐ │
-│ │ 8080/TCP    │◄┼────┤ │    daemon   │ │    │ │  Python     │ │
+│ │ 8080/TCP    │◄┼────┤ │    daemon   │ │    │ │  Go         │ │
 │ │ Health Check│ │    │ └─────────────┘ │    │ │  HTTP Server│ │
 │ └─────────────┘ │    │                 │    │ └─────────────┘ │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
@@ -242,6 +244,6 @@ MIT
 
 ---
 
-**🐧 Tested on Alpine Linux 3.22 | 🐳 Docker Ready | 🚀 Production Grade**
+**🐧 Tested on Alpine Linux 3.24 | 🐳 Docker Ready | 🚀 Production Grade**
 
 

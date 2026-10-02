@@ -13,7 +13,7 @@ services:
       - "51820:51820/UDP"
       - "8080:8080"
     healthcheck:
-      test: ["CMD", "sh", "-c", "curl -f http://localhost:8080 || exit 1"]
+      test: ["CMD", "sh", "-c", "wget -q --spider http://localhost:8080 || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 3

@@ -2,16 +2,18 @@
 
 ## Overview
 
-This is a lightweight, containerized Wireguard VPN solution built on Alpine Linux. The project includes a Python health check server and bash entrypoint script.
+This is a lightweight, containerized Wireguard VPN solution built on Alpine Linux. The project includes a Go health check server and bash entrypoint script.
 
 ## Project Structure
 
 ```
 .
-├── Dockerfile              # Alpine-based container definition
+├── Dockerfile              # Multi-stage Alpine-based container definition
 ├── docker-compose.yml      # Docker Compose orchestration
 ├── entrypoint.sh           # Container startup script (bash)
-├── wireguard_healthcheck.py # HTTP health check server (Python 3)
+├── go.mod                  # Go module definition
+├── main.go                 # HTTP health check server (Go)
+├── main_test.go            # Health check server unit tests
 ├── etc/                    # Wireguard configuration directory
 │   ├── wg0.conf           # Main Wireguard configuration
 │   ├── privatekey         # Wireguard private key
@@ -48,7 +50,17 @@ deepsource analyze
 
 ### Test Commands
 
-There are currently **no formal test suites** in this project. To run manual tests:
+Run Go unit tests:
+
+```bash
+# Run unit tests with race detection and coverage
+go test -v -race -cover ./...
+
+# Vet Go source code
+go vet ./...
+```
+
+To run manual integration tests:
 
 ```bash
 # Test health endpoint after running container
@@ -69,40 +81,24 @@ docker logs -f <container>
 - Prefer simplicity over complexity
 - Use Alpine Linux best practices (minimal packages)
 
-### Python (wireguard_healthcheck.py)
+### Go (main.go, main_test.go)
 
 **Formatting:**
-- Use 4 spaces for indentation (not tabs)
-- Maximum line length: 100 characters
-- Use single blank lines between top-level definitions
+- Always format with `gofmt` or `goimports`
+- Use standard Go naming conventions (`camelCase`, `PascalCase`)
 
-**Imports:**
-- Standard library imports first, then third-party
-- Use explicit imports (not `from x import *`)
-
-**Naming:**
-- `snake_case` for functions, variables
-- `PascalCase` for classes
-- Descriptive names that convey purpose
+**Standard Library:**
+- Prefer standard library packages (`net/http`, `os`, `os/signal`, `syscall`, `time`)
+- Avoid external third-party dependencies unless strictly necessary
 
 **Error Handling:**
-- Use try/except for file operations and system calls
-- Return appropriate HTTP status codes (200 for success, 503 for failure)
-- Never expose stack traces to HTTP clients
+- Explicit error checking
+- Return appropriate HTTP status codes (200 for success, 503 for failure, 405 for unsupported methods)
+- Never expose sensitive errors or stack traces to HTTP clients
 
-**Type Hints:**
-- Not currently used, but recommended for new code
-
-**Example:**
-```python
-def is_link_up(interface: str) -> bool:
-    """Check if network interface is up."""
-    try:
-        with open(f'/sys/class/net/{interface}/carrier') as f:
-            return f.read().strip() == '1'
-    except (FileNotFoundError, OSError):
-        return False
-```
+**Testing:**
+- Write unit tests using standard `testing` package
+- Aim for high test coverage of health checking logic and HTTP endpoints
 
 ### Shell Scripts (entrypoint.sh)
 
@@ -132,14 +128,15 @@ finish() {
 trap finish SIGTERM SIGINT SIGQUIT
 
 wg-quick up /etc/wireguard/wg0.conf
-python3 wireguard_healthcheck.py &
+/wireguard_healthcheck &
 wait $!
 ```
 
 ### Docker
 
 **Dockerfile Best Practices:**
-- Use specific version tags (e.g., `alpine:3.22`, not `alpine:latest`)
+- Use multi-stage builds to keep final runtime image minimal
+- Use specific version tags (e.g., `alpine:3.24`, not `alpine:latest`)
 - Combine related RUN commands to reduce layers
 - Use `--no-cache` with apk to reduce image size
 - Set proper file permissions with `chmod +x`
