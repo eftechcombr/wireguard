@@ -4,10 +4,7 @@ version = 1
 name = "shell"
 
 [[analyzers]]
-name = "python"
-
-  [analyzers.meta]
-  runtime_version = "3.x.x"
+name = "go"
 
 [[analyzers]]
 name = "docker"

@@ -3,3 +3,5 @@ privatekey
 
 */publickey
 publickey
+
+wireguard_healthcheck
