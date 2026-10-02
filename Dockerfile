@@ -14,7 +14,6 @@ COPY entrypoint.sh /
 
 RUN apk add --no-cache \
     wireguard-tools=~1.0.20260223 \
-    curl \
     iptables && \
   chmod +x /entrypoint.sh /wireguard_healthcheck
 
