@@ -1,10 +1,17 @@
 version = 1
 
+test_patterns = [
+  "**/*_test.go"
+]
+
 [[analyzers]]
 name = "shell"
 
 [[analyzers]]
 name = "go"
+
+  [analyzers.meta]
+  import_root = "github.com/eftechcombr/wireguard"
 
 [[analyzers]]
 name = "docker"
