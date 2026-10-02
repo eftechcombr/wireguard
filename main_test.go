@@ -15,7 +15,7 @@ func TestIsLinkUp(t *testing.T) {
 	tempDir := t.TempDir()
 	iface := "wg0"
 	ifaceDir := filepath.Join(tempDir, iface)
-	if err := os.MkdirAll(ifaceDir, 0755); err != nil {
+	if err := os.MkdirAll(ifaceDir, 0750); err != nil {
 		t.Fatalf("failed to create temp iface dir: %v", err)
 	}
 
@@ -59,7 +59,7 @@ func TestServeHTTP_GET(t *testing.T) {
 	tempDir := t.TempDir()
 	iface := "wg0"
 	ifaceDir := filepath.Join(tempDir, iface)
-	if err := os.MkdirAll(ifaceDir, 0755); err != nil {
+	if err := os.MkdirAll(ifaceDir, 0750); err != nil {
 		t.Fatalf("failed to create temp iface dir: %v", err)
 	}
 	carrierFile := filepath.Join(ifaceDir, "carrier")
@@ -130,7 +130,7 @@ func TestServeHTTP_HEAD(t *testing.T) {
 	tempDir := t.TempDir()
 	iface := "wg0"
 	ifaceDir := filepath.Join(tempDir, iface)
-	if err := os.MkdirAll(ifaceDir, 0755); err != nil {
+	if err := os.MkdirAll(ifaceDir, 0750); err != nil {
 		t.Fatalf("failed to create temp iface dir: %v", err)
 	}
 	carrierFile := filepath.Join(ifaceDir, "carrier")
@@ -195,14 +195,12 @@ func TestServeHTTP_UnsupportedMethods(t *testing.T) {
 
 func TestGetEnvOrDefault(t *testing.T) {
 	key := "TEST_ENV_VAR_WIREGUARD"
-	_ = os.Unsetenv(key)
 
 	if val := getEnvOrDefault(key, "fallback"); val != "fallback" {
 		t.Errorf("expected fallback, got %q", val)
 	}
 
-	_ = os.Setenv(key, "custom")
-	defer os.Unsetenv(key)
+	t.Setenv(key, "custom")
 
 	if val := getEnvOrDefault(key, "fallback"); val != "custom" {
 		t.Errorf("expected custom, got %q", val)

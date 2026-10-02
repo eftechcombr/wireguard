@@ -1,3 +1,4 @@
+// Package main provides a lightweight HTTP health check server for WireGuard.
 package main
 
 import (
