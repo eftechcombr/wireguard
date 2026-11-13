@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: latest
+          ref: main
 
       - name: Reset dev branch
         run: |

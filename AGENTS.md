@@ -159,7 +159,7 @@ wait $!
 
 ### Git Workflow
 
-- Create feature branches from `latest`
+- Create feature branches from `main`
 - Use descriptive commit messages
 - Test changes locally before PR
 - Ensure Dockerfile builds successfully
@@ -167,7 +167,8 @@ wait $!
 ### CI/CD
 
 - GitHub Actions workflows are defined in `.github/workflows/`
-- Docker images build on push to `dev` and `latest` branches
+- Docker images build on published releases or manual workflow dispatch
+- Pushes to `dev` create or update a pull request against the default branch
 - Multi-platform builds (linux/amd64, linux/arm64) are configured
 
 ## Environment Variables
@@ -186,7 +187,7 @@ wait $!
 
 ### Adding a New Feature
 
-1. Create a feature branch from `latest`
+1. Create a feature branch from `main`
 2. Make changes following code style guidelines
 3. Test locally with `docker compose up`
 4. Verify health endpoint responds correctly
