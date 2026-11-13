@@ -1,0 +1,26 @@
+name: Create pull request from dev
+
+on:
+  push:
+    branches: ["dev"]
+
+jobs:
+  create-pull-request:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: latest
+
+      - name: Reset dev branch
+        run: |
+          git fetch origin dev:dev
+          git reset --hard dev
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          branch: dev
