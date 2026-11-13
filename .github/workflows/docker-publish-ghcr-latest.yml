@@ -1,10 +1,14 @@
 name: Docker build latest on ghcr
 
 on:
-  schedule:
-    - cron: '1 1 1 * *'
-  push:
-    branches: [ "latest" ]
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: "Version tag for the manually built image (for example, 1.2.3)"
+        required: true
+        type: string
 
 env:
   # Use docker.io for Docker Hub if empty
@@ -59,7 +63,9 @@ jobs:
             latest=auto
           tags: |
             type=ref,enable=true,priority=600,prefix=,suffix=,event=branch
-            type=raw,value=${{ env.GITHUB_HEAD_REF }}
+            type=ref,enable=true,priority=600,event=tag
+            type=raw,value=${{ inputs.release_version }},enable=${{ github.event_name == 'workflow_dispatch' }}
+            type=raw,value=latest
 
 
       # Build and push Docker image with Buildx (don't push on PR)
@@ -75,6 +81,3 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-
-          
