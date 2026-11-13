@@ -57,7 +57,29 @@ curl http://localhost:8080
 # Expected response: HTTP 200 if VPN is active, 503 if down
 ```
 
-### 5. Docker Compose (Recommended)
+### 5. Peer Connection Logs
+
+The Go service writes structured JSON logs to stdout, including HTTP health-check requests, newly observed peer handshakes, and peer traffic-counter changes. Peer entries include the public key and endpoint; handshake entries also include allowed IPs and the latest handshake time. View logs with:
+
+```sh
+docker logs -f wireguard
+```
+
+Handshake timestamps are Unix seconds. WireGuard does not expose a definitive peer disconnect event, so these logs report handshakes and traffic changes rather than disconnects. The monitor checks every five seconds by default; set `WG_LOG_INTERVAL` to a Go duration such as `10s` to change the polling interval.
+
+### OpenTelemetry Logs
+
+When an OTLP/HTTP endpoint is configured, the same application logs are exported to OpenTelemetry as well as stdout. Without an endpoint, the service logs to stdout only.
+
+```sh
+OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4318 docker compose up -d
+```
+
+You can instead set `OTEL_EXPORTER_OTLP_LOGS_ENDPOINT` to configure only the logs endpoint. `OTEL_SERVICE_NAME` defaults to `wireguard`. The exporter uses the standard OTEL headers, timeout, and resource environment settings.
+
+WireGuard itself has no `wg`/`wg-quick` verbosity flag. Linux kernel dynamic-debug messages are a separate host-kernel facility, require kernel support and debugfs access, and go to the kernel log (`dmesg`), not this container's stdout.
+
+### 6. Docker Compose (Recommended)
 
 ```yaml
 version: '3.8'
@@ -245,5 +267,3 @@ MIT
 ---
 
 **🐧 Tested on Alpine Linux 3.24 | 🐳 Docker Ready | 🚀 Production Grade**
-
-

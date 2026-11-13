@@ -1,9 +1,12 @@
-FROM golang:alpine3.24 AS builder
+# syntax=docker/dockerfile:1
+FROM golang:1.27.4-alpine3.24 AS builder
 
 WORKDIR /src
 
-COPY go.mod ./
-COPY main.go ./
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY *.go ./
 
 RUN CGO_ENABLED=0 go build -ldflags="-s -w" -o /wireguard_healthcheck .
 
