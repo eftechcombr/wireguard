@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bytes"
+	"context"
 	"io"
+	"log/slog"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -10,6 +13,57 @@ import (
 	"testing"
 	"time"
 )
+
+func TestLogPeerChanges(t *testing.T) {
+	var output bytes.Buffer
+	logger := slog.New(slog.NewJSONHandler(&output, nil))
+	previous := map[string]peerStats{
+		"peer-key": {
+			endpoint:        "192.0.2.1:51820",
+			allowedIPs:      "10.0.0.2/32",
+			latestHandshake: 100,
+			receivedBytes:   50,
+			sentBytes:       60,
+		},
+	}
+	current := map[string]peerStats{
+		"peer-key": {
+			endpoint:        "192.0.2.1:51820",
+			allowedIPs:      "10.0.0.2/32",
+			latestHandshake: 200,
+			receivedBytes:   75,
+			sentBytes:       80,
+		},
+	}
+
+	logPeerChanges(context.Background(), logger, previous, current)
+
+	for _, expected := range []string{
+		"WireGuard peer handshake",
+		"WireGuard peer traffic",
+		"peer.public_key",
+		"peer.received_bytes_delta",
+		"peer.sent_bytes_delta",
+	} {
+		if !strings.Contains(output.String(), expected) {
+			t.Errorf("expected logs to contain %q, got %s", expected, output.String())
+		}
+	}
+}
+
+func TestRequestLoggerLogsResponseStatus(t *testing.T) {
+	var output bytes.Buffer
+	logger := slog.New(slog.NewJSONHandler(&output, nil))
+	handler := requestLogger(logger, http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusServiceUnavailable)
+	}))
+
+	handler.ServeHTTP(httptest.NewRecorder(), httptest.NewRequest(http.MethodGet, "/", nil))
+
+	if !strings.Contains(output.String(), `"status":503`) {
+		t.Fatalf("expected request log to include status 503, got %s", output.String())
+	}
+}
 
 func TestIsLinkUp(t *testing.T) {
 	tempDir := t.TempDir()
@@ -220,4 +274,3 @@ func TestNewServer(t *testing.T) {
 		t.Errorf("expected 5s ReadHeaderTimeout, got %v", srv.ReadHeaderTimeout)
 	}
 }
-
